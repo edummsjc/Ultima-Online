@@ -1,0 +1,146 @@
+if skill 'magery' >= 60
+    while not findbuff 'magic reflection'
+        overhead '* Reflect Up *'
+        cast 'magic reflection'
+        waitfortarget 
+        target 'self'
+        pause 2000
+    endwhile
+endif
+
+if insysmsg 'You have recently traveled'
+    if skill 'hiding' > 80
+        while not 'hidden'
+            useskill 'hiding'
+            wait 2000
+            clearsysmsg
+        endwhile
+    endif
+    overhead '* Travel CD *'
+    wait 60000
+    clearsysmsg 
+endif
+
+if not listexists 'tracking'
+    overhead '* Setup Tracking *'
+    createlist 'tracking'
+    if skill 'tracking' > 80
+        while not insysmsg 'You will now'
+            useskill 'tracking'
+            waitforgump any 2000
+            gumpresponse 6
+            wait 500
+            gumpclose
+            clearsysmsg
+        endwhile
+    endif
+endif 
+
+if not timerexists 'chop'
+    createtimer 'chop'
+    settimer 'chop' 0
+endif
+
+if listexists 'tracking'
+    if insysmsg 'Now Tracking:'
+        overhead '** Red **' 33
+        interrupt
+        while not targetexists
+            cast recall
+            waitfortarget 2000
+        endwhile
+        if findtype '8901' backpack as myRunebook
+                target myRunebook // runebook
+            elseif findtype 29103 backpack as myRunetome
+            target myRuntome //runetome
+        endif
+        clearsysmsg 
+        stop
+    endif
+endif
+
+if insysmsg '0x55'
+    overhead ' Captcha Detected '
+    waitforsysmsg '0x5B5' 240000
+    clearsysmsg 
+endif
+
+if lhandempty
+    overhead '* Empty Hands *'
+    if findtype 'hatchet' backpack
+        dclicktype "hatchet" backpack
+        wait 1000
+    else
+        overhead '* No tools *' 33
+        interrupt
+        while not targetexists
+            cast recall
+            waitfortarget 2000
+        endwhile
+        if findtype '8901' backpack as myRunebook
+                target myRunebook // runebook
+            elseif findtype 29103 backpack as myRunetome
+            target myRuntome //runetome
+        endif
+        while findtype 'hatchet' false
+            overhead '** Need Tools **' 33
+            wait 500
+        endwhile
+    endif
+endif
+
+if timer chop > 3200
+    overhead '* Chopping *'
+    hotkey 'Use item in hand'
+    waitfortarget
+    hotkey 'Target Self'
+    wait 1000
+    settimer 'chop' 0
+endif
+
+if insysmsg 'You do not see any'
+    random 4
+if insysmsg 'Random: 1'
+        walk 'north'
+        walk 'north'
+        clearsysmsg 
+    elseif insysmsg 'Random: 2'
+        walk 'south'
+        walk 'south'
+        clearsysmsg 
+    elseif insysmsg 'Random: 3'
+        walk 'west'
+        walk 'west'
+        clearsysmsg 
+    elseif insysmsg 'Random: 4'
+        walk 'east'
+        walk 'east'
+        clearsysmsg 
+endif
+    overhead '* Logs to Boards *'
+    while findtype 7133 'backpack'
+        wait 2000
+        usetype 7133
+    endwhile
+    overhead '* Move *' 
+    settimer 'chop' 4000
+endif
+
+if weight > 500
+        overhead '* I'm fat ! *'
+        interrupt
+        while not targetexists
+            cast recall
+            waitfortarget 2000
+        endwhile
+        if findtype '8901' backpack as myRunebook
+                target myRunebook // runebook
+            elseif findtype 29103 backpack as myRunetome
+            target myRuntome //runetome
+        endif
+    while wieght > 500
+        wait 500
+    endwhile
+endif
+
+loop
